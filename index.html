@@ -89,12 +89,8 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:
 .hero{position:relative;height:330svh}
 .hero-pin{position:sticky;top:0;height:100svh;overflow:hidden}
 #eye{display:none}
-.eye-real{position:absolute;inset:0;overflow:hidden;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
-.eye-zoom{position:absolute;inset:0;will-change:transform}
-.eye-img{position:absolute;max-width:none;display:block;user-select:none;-webkit-user-drag:none}
-.eye-img.fit{-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 22%,#000 76%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,#000 22%,#000 76%,transparent 100%)}
-.eye-pupil{position:absolute;border-radius:50%;background:radial-gradient(circle,#000 0 50%,rgba(0,0,0,.82) 60%,rgba(0,0,0,0) 72%);transform:translate(-50%,-50%) scale(var(--pd,1))}
-.eye-refl{position:absolute;mix-blend-mode:screen;pointer-events:none;filter:blur(.35px)}
+.eye-real{position:absolute;inset:0;overflow:hidden}
+.eye-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 .eye-glint{display:none;border-radius:50%;background:radial-gradient(circle,rgba(225,240,255,.95) 0%,rgba(110,170,255,.45) 30%,rgba(60,120,255,0) 70%);mix-blend-mode:screen;transform:translate(-50%,-50%);animation:glint 2.6s ease-in-out infinite}
 @keyframes glint{0%,100%{opacity:.35;transform:translate(-50%,-50%) scale(.85)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.15)}}
 .eye-shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(2,6,18,.97) 0%,rgba(2,6,18,.82) 24%,rgba(2,6,18,.25) 46%,rgba(2,6,18,0) 58%),radial-gradient(130% 95% at 50% 38%,rgba(2,6,18,0) 52%,rgba(2,6,18,.8) 100%)}
@@ -347,6 +343,12 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:
 .form input,.form textarea{width:100%;min-width:0}
 footer{border-top:1px solid var(--line);padding-block:28px calc(28px + env(safe-area-inset-bottom, 0px));color:var(--dim);font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer .wrap{align-items:center}
+footer .li{display:inline-flex;align-items:center;gap:8px;color:var(--soft);text-decoration:none;transition:color .25s}
+footer .li svg{width:16px;height:16px;fill:currentColor}
+footer .li:hover{color:#fff}
+@media (min-width:901px){ footer .wrap{padding-right:76px} }
+@media (max-width:900px){ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom, 0px))} }
 
 
 /* global sky */
@@ -450,7 +452,7 @@ main,footer{position:relative;z-index:1}
   <section class="hero" id="hero" aria-label="Eyes Bot">
     <div class="hero-pin">
       <div class="eye-real" aria-hidden="true">
-        <div class="eye-zoom"><img class="eye-img" src="eye.jpg" alt="" decoding="async" fetchpriority="high"><i class="eye-pupil"></i><canvas class="eye-refl"></canvas></div>
+        <canvas class="eye-cv"></canvas>
         <div class="eye-shade"></div>
       </div>
       <i class="eye-slit" aria-hidden="true"></i>
@@ -778,6 +780,7 @@ main,footer{position:relative;z-index:1}
 <footer class="gut"><div class="wrap">
   <span class="brand" style="font-size:17px;color:var(--fg)"><svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M2 24h9M37 24h9" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="24" cy="24" r="4.6" fill="#4FD6FF"/></svg><span class="bw">Eyes <span>Bot</span></span></span>
   <span>O seu time de IA.</span>
+  <a class="li" href="https://br.linkedin.com/in/felipe-jk-200808a2" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>Felipe Karimata · Fundador</a>
   <span>© 2026 Eyes Bot</span>
 </div></footer>
 
@@ -952,72 +955,88 @@ const ADD = { transparent: true, depthWrite: false, depthTest: false, blending: 
   });
 })();
 
-/* ===================== THE EYE (photo) ===================== */
+/* ===================== THE EYE (photo, single canvas) ===================== */
 const EY = { lo: 0, o: 0, z: 0, d: 0, r: 0 };
 (function eye(){
-  const root = $('.eye-real'), zoom = $('.eye-zoom'), img = $('.eye-img'), pup = $('.eye-pupil'), rc = $('.eye-refl'), rcx = rc.getContext('2d'), slit = $('.eye-slit');
+  const root = $('.eye-real'), cv = $('.eye-cv'), ctx = cv.getContext('2d'), slit = $('.eye-slit');
+  const IMG = new Image(); IMG.decoding = 'async'; IMG.src = 'eye.jpg';
   const RIM = new Image(); RIM.src = 'rocket.png';
-  const BX = 1360, BY = 300, BW = 360, BH = 560, ICX = 1293, ICY = 705, IRR = 405;
-  const IW = 2576, IH = 1438, FX = .502, FY = .4905, PRr = .0456, RX = .593, RY = .431;
-  let L = { cx: 0, cy: 0, s: 1, W: 1, H: 1 };
+  const IW = 2576, IH = 1438, FX = .502, FY = .4905, PRr = .0456, ICX = 1293, ICY = 705, IRR = 405;
+  let L = { cx: 0, cy: 0, s: 1, W: 1, H: 1, dpr: 1, port: false };
   const layout = () => {
-    const W = innerWidth, H = innerHeight, cx = W / 2, cy = H * (W / H < 1.1 ? .32 : .38);
-    const port = W / H < 1.1;
+    const W = innerWidth, H = innerHeight, port = W / H < 1.1, cx = W / 2, cy = H * (port ? .32 : .38);
     const s = port ? W * 2.15 / IW : Math.max(cx / (FX * IW), (W - cx) / ((1 - FX) * IW), cy / (FY * IH), (H - cy) / ((1 - FY) * IH)) * 1.02;
-    img.classList.toggle('fit', port);
-    L = { cx, cy, s, W, H };
-    Object.assign(img.style, { width: IW * s + 'px', height: IH * s + 'px', left: cx - FX * IW * s + 'px', top: cy - FY * IH * s + 'px' });
-    const pr = PRr * IW * s * 2.3;
-    Object.assign(pup.style, { width: pr + 'px', height: pr + 'px', left: cx + 'px', top: cy + 'px' });
-    const il = cx - FX * IW * s, it = cy - FY * IH * s, dpr = Math.min(devicePixelRatio || 1, 2);
-    rc.width = Math.round(BW * s * dpr); rc.height = Math.round(BH * s * dpr); L.k = s * dpr;
-    Object.assign(rc.style, { left: il + BX * s + 'px', top: it + BY * s + 'px', width: BW * s + 'px', height: BH * s + 'px' });
-    zoom.style.transformOrigin = cx + 'px ' + cy + 'px';
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    L = { cx, cy, s, W, H, dpr, port, il: cx - FX * IW * s, it: cy - FY * IH * s };
     slit.style.top = cy + 'px';
   };
   layout(); addEventListener('resize', layout);
   if (reduce) EY.lo = .45; else gsap.to(EY, { lo: .45, duration: 2.6, delay: .35, ease: 'power2.inOut' });
   let vis = true; watch($('#hero'), v => vis = v);
   const ss = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
-  // rocket rising inside the cornea reflection (image pixel space)
   const P0 = [1566, 820], P1 = [1552, 560], P2 = [1470, 360];
   const bz = u => { const v = 1 - u; return [v * v * P0[0] + 2 * v * u * P1[0] + u * u * P2[0], v * v * P0[1] + 2 * v * u * P1[1] + u * u * P2[1]]; };
   const bd = u => [2 * (1 - u) * (P1[0] - P0[0]) + 2 * u * (P2[0] - P1[0]), 2 * (1 - u) * (P1[1] - P0[1]) + 2 * u * (P2[1] - P1[1])];
+  // draws the rising rocket in image-pixel space (caller sets the transform)
   const refl = (u, now) => {
-    const k = L.k; rcx.setTransform(k, 0, 0, k, -BX * k, -BY * k); rcx.clearRect(BX, BY, BW, BH);
     const a = 1 - ss(.86, 1, u); if (a <= 0 || !RIM.complete || !RIM.naturalWidth) return;
-    rcx.save(); rcx.beginPath(); rcx.arc(ICX, ICY, IRR, 0, Math.PI * 2); rcx.clip();
+    ctx.save(); ctx.beginPath(); ctx.arc(ICX, ICY, IRR, 0, Math.PI * 2); ctx.clip();
     const len = 150 - 66 * u;
-    rcx.globalCompositeOperation = 'lighter';
+    ctx.globalCompositeOperation = 'lighter';
     for (let i = 26; i >= 1; i--) { const tu = u - i * .011, [x, y] = bz(tu), f = 1 - i / 27;
-      rcx.fillStyle = `rgba(${120 + 100 * f | 0},${180 + 60 * f | 0},255,${.11 * f * a})`; rcx.beginPath(); rcx.arc(x, y + len * .02, len * (.05 + .1 * (1 - f)), 0, Math.PI * 2); rcx.fill(); }
+      ctx.fillStyle = `rgba(${120 + 100 * f | 0},${180 + 60 * f | 0},255,${.11 * f * a})`; ctx.beginPath(); ctx.arc(x, y + len * .02, len * (.05 + .1 * (1 - f)), 0, Math.PI * 2); ctx.fill(); }
     const [x, y] = bz(u), [dx, dy] = bd(u), ang = Math.atan2(dx, -dy), fl = .8 + Math.random() * .4, Dh = len / .851, Dw = Dh * 176 / 1516;
-    rcx.translate(x, y + Math.sin(now * 2.2) * .8); rcx.rotate(ang);
-    const g = rcx.createRadialGradient(0, len * .1, 0, 0, len * .1, len * .32 * fl);
+    ctx.translate(x, y + Math.sin(now * 2.2) * .8); ctx.rotate(ang);
+    const g = ctx.createRadialGradient(0, len * .1, 0, 0, len * .1, len * .32 * fl);
     g.addColorStop(0, `rgba(235,247,255,${.95 * a})`); g.addColorStop(.3, `rgba(120,185,255,${.5 * a})`); g.addColorStop(1, 'rgba(60,120,255,0)');
-    rcx.fillStyle = g; rcx.beginPath(); rcx.arc(0, len * .1, len * .32 * fl, 0, Math.PI * 2); rcx.fill();
-    rcx.globalCompositeOperation = 'source-over'; rcx.globalAlpha = a;
-    rcx.drawImage(RIM, -Dw / 2, -.851 * Dh, Dw, Dh);
-    rcx.restore(); rcx.globalAlpha = 1;
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, len * .1, len * .32 * fl, 0, Math.PI * 2); ctx.fill();
+    ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = a;
+    ctx.drawImage(RIM, -Dw / 2, -.851 * Dh, Dw, Dh);
+    ctx.restore();
   };
+  let wasOff = false;
   gsap.ticker.add(t => {
-    if (!vis) return;
-    const open = Math.max(EY.lo, EY.o), { cx, cy, W, H } = L;
-    if (open >= .995) { root.style.webkitMaskImage = root.style.maskImage = 'none'; }
-    else {
-      const rx = W * (.42 + 1.2 * open), ry = H * (.012 + 1.75 * open * open);
-      const m = `radial-gradient(${rx}px ${ry}px at ${cx}px ${cy}px, #000 48%, transparent 100%)`;
-      root.style.webkitMaskImage = root.style.maskImage = m;
-    }
+    const op = 1 - ss(.72, 1, EY.d);
+    root.style.opacity = op;
+    const open = Math.max(EY.lo, EY.o);
     slit.style.opacity = clamp(1 - open * 2.4, 0, 1);
     slit.style.transform = `translateY(-50%) scaleX(${.5 + open})`;
-    const live = 1 - EY.d;
+    if (!vis || op <= .002) { if (!wasOff) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); wasOff = true; } return; }
+    wasOff = false;
+    if (!IMG.complete || !IMG.naturalWidth) return;
+    const { cx, cy, s, W, H, dpr, port, il, it } = L, live = 1 - EY.d;
     const sc = (1.1 - .1 * ss(0, 1, open)) * (1 + .3 * EY.z) * Math.pow(30, EY.d * EY.d) * (1 + .01 * Math.sin(t * .7) * live);
     const px = -clamp(M.sx, -1, 1) * 14 * live, py = -clamp(M.sy, -1, 1) * 9 * live;
-    zoom.style.transform = `translate3d(${px}px, ${py}px, 0) scale(${sc})`;
-    pup.style.setProperty('--pd', 1 + .22 * EY.z + .5 * EY.d);
-    root.style.opacity = 1 - ss(.72, 1, EY.d);
-    refl(EY.r, t);
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    // camera: scale around the pupil
+    ctx.setTransform(dpr * sc, 0, 0, dpr * sc, dpr * (cx + px - cx * sc), dpr * (cy + py - cy * sc));
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(IMG, il, it, IW * s, IH * s);
+    if (port) { // soft top/bottom fade of the photo on portrait screens
+      const g = ctx.createLinearGradient(0, it, 0, it + IH * s);
+      g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(.22, '#000'); g.addColorStop(.76, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.globalCompositeOperation = 'destination-in'; ctx.fillStyle = g; ctx.fillRect(il - 10, it - 10, IW * s + 20, IH * s + 20);
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    // pupil dilation
+    const pr = PRr * IW * s * 1.15 * (1 + .22 * EY.z + .5 * EY.d);
+    const pg = ctx.createRadialGradient(cx, cy, 0, cx, cy, pr);
+    pg.addColorStop(0, 'rgba(0,0,0,1)'); pg.addColorStop(.5, 'rgba(0,0,0,1)'); pg.addColorStop(.6, 'rgba(0,0,0,.82)'); pg.addColorStop(.72, 'rgba(0,0,0,0)');
+    ctx.fillStyle = pg; ctx.beginPath(); ctx.arc(cx, cy, pr, 0, Math.PI * 2); ctx.fill();
+    // reflection rocket, in image pixel space
+    ctx.save(); ctx.translate(il, it); ctx.scale(s, s); refl(EY.r, t); ctx.restore();
+    // eyelid opening (soft elliptical reveal), screen space
+    if (open < .995) {
+      const rx = W * (.42 + 1.2 * open), ry = H * (.012 + 1.75 * open * open);
+      ctx.setTransform(dpr, 0, 0, dpr * ry / rx, dpr * cx, dpr * cy);
+      const mg = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+      mg.addColorStop(0, '#000'); mg.addColorStop(.48, '#000'); mg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.globalCompositeOperation = 'destination-in'; ctx.fillStyle = mg;
+      ctx.fillRect(-W * 4, -H * 4 * rx / ry, W * 8, H * 8 * rx / ry);
+      ctx.globalCompositeOperation = 'source-over';
+    }
   });
 })();
 
