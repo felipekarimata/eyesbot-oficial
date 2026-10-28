@@ -1,0 +1,377 @@
+/* Eyes Bot. Conceito Conexões: texto à esquerda, coisas entrando à direita conforme rola.
+   Laranja é sempre o problema; verde é sempre a solução. */
+:root{--bg:#0c0d10;--ink:#eef0f3;--ink2:#c9ccd3;--muted:#8b8f98;--line:rgba(255,255,255,.12);--acc:#5ef2b5;--warm:#f0a35e;--node:#16181d;--card:#14161b;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--pad:max(4vw,20px);--ease:cubic-bezier(.2,.8,.2,1);color-scheme:dark}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);-webkit-text-size-adjust:100%;overflow-anchor:none}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:6px}
+.k{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:48px;padding:0 20px;border-radius:12px;font-size:15px;font-weight:500;white-space:nowrap;cursor:pointer;border:1px solid transparent;transition:transform .25s var(--ease),background .2s}
+.btn:hover{transform:translateY(-1px)}
+.b1{background:var(--acc);color:#07120d}
+.b2{background:transparent;border-color:var(--line);color:var(--ink)}
+.b2:hover{background:rgba(255,255,255,.04)}
+
+/* topo: o indicador desliza até a seção atual */
+.top{position:fixed;top:0;left:0;right:0;z-index:50;height:72px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:0 var(--pad);background:linear-gradient(var(--bg) 70%,rgba(12,13,16,0))}
+.logo{font-weight:600;font-size:18px;display:flex;align-items:center;gap:10px;justify-self:start}
+.logo i{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--acc);position:relative}
+.logo i::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--acc)}
+.nav{position:relative;display:flex;gap:26px;font-size:14px;color:var(--muted)}
+.nav a{padding:8px 0;transition:color .25s}
+.nav a:hover,.nav a.on{color:var(--ink)}
+.nav .ind{position:absolute;left:0;bottom:2px;height:1.5px;width:0;background:var(--acc);border-radius:2px;transition:transform .45s var(--ease),width .45s var(--ease)}
+.top .btn{justify-self:end;height:40px;font-size:14px;padding:0 16px}
+/* de parte em parte: no meio da tela, a parte de antes em cima e a seguinte embaixo; no canto de baixo, começo e fim */
+.sn,.ends button{border:1px solid var(--line);background:rgba(12,13,16,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--muted);cursor:pointer;opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s,color .2s,border-color .2s}
+.sn.on,.ends button.on{opacity:1;visibility:visible;transition:opacity .3s,visibility 0s,color .2s,border-color .2s}
+.sn:hover,.ends button:hover{color:var(--ink);border-color:rgba(94,242,181,.5)}
+.sn{position:fixed;left:50%;z-index:40;display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 13px;border-radius:9px;font-size:13px;white-space:nowrap;transform:translateX(-50%)}
+.sn span{color:var(--acc)}
+.sn b{font-weight:500}
+.sn.up{top:78px}.sn.dn{bottom:18px}
+.ends{position:fixed;right:20px;bottom:18px;z-index:40;display:flex;gap:6px}
+.ends button{width:36px;height:36px;border-radius:10px;font-size:15px;color:var(--ink2)}
+.ends button:not(.on){display:none}
+
+/* faixas presas */
+.pinsec{position:relative}
+.pin{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(0,40%) minmax(0,60%);overflow:hidden}
+.left{position:relative;padding:72px 0 0 var(--pad)}
+.slides{position:relative;height:100%}
+/* o texto escondido também sai do caminho do teclado (visibility), não só da vista */
+.sl{position:absolute;left:0;right:24px;top:50%;transform:translateY(-46%);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s,transform .5s var(--ease),visibility 0s .2s}
+.sl.on,.sl.fix{opacity:1;visibility:visible;transform:translateY(-50%);pointer-events:auto}
+/* o texto que sai some rápido; o que entra espera um instante */
+.sl.on{transition:opacity .45s .16s,transform .6s .16s var(--ease),visibility 0s}
+h1{font-weight:500;font-size:clamp(38px,min(4.6vw,8.4vh),70px);line-height:1.02;letter-spacing:-.035em;margin-top:16px}
+h2{font-weight:500;font-size:clamp(32px,min(3.8vw,7.4vh),56px);line-height:1.04;letter-spacing:-.03em;margin-top:14px;text-wrap:balance}
+h1 em,h2 em{font-style:normal;color:var(--acc)}
+.lead{font-size:17px;line-height:1.5;color:var(--muted);margin-top:18px;max-width:38ch}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.proof{margin-top:36px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.proof img{height:18px;width:auto;opacity:.55}
+.proof a{font-size:13px;color:var(--ink2);border-bottom:1px solid var(--line)}
+
+/* um pedido: o problema em cima, o fio, a solução embaixo */
+.lab{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.lab i{width:7px;height:7px;border-radius:50%}
+.prob{margin-top:14px}
+.prob .lab{color:var(--warm)}.prob .lab i{border:1.5px solid var(--warm)}
+.sol .lab{color:var(--acc)}.sol .lab i{background:var(--acc);box-shadow:0 0 10px var(--acc)}
+.q{display:block;font-size:clamp(24px,min(2.5vw,5vh),38px);line-height:1.14;letter-spacing:-.02em;margin-top:10px;color:var(--ink2);quotes:"“" "”"}
+.nw{white-space:nowrap}
+.wirev{width:1.5px;height:34px;margin:16px 0 14px 3px;background:linear-gradient(var(--warm),var(--acc));transform-origin:top;transform:scaleY(0)}
+.sol p{font-size:19px;line-height:1.38;font-weight:500;margin-top:8px;max-width:30ch}
+.conn{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.conn span{border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+.conn span b{color:var(--acc);font-weight:500}
+.sl.on .prob,.sl.on .rise{animation:rise .5s var(--ease) both}
+.sl.on .wirev{animation:draw .45s .45s var(--ease) both}
+.sl.on .sol{animation:rise .5s .85s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+@keyframes draw{to{transform:scaleY(1)}}
+
+/* trilho dos passos (cada trecho enche enquanto rola) e o aviso de rolar */
+.rail{position:absolute;left:var(--pad);right:28px;bottom:22px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;opacity:0;visibility:hidden;transform:translateY(6px);pointer-events:none;transition:opacity .4s,transform .4s var(--ease),visibility 0s .4s}
+.rail.vis{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:opacity .4s .18s,transform .4s .18s var(--ease),visibility 0s}
+.rail .ri{display:grid;grid-template-columns:repeat(var(--n,5),minmax(0,1fr));gap:10px;width:100%;max-width:480px}
+.rail button{display:grid;gap:8px;text-align:left;background:none;border:0;cursor:pointer;color:var(--muted);font-size:12.5px;padding:6px 0;transition:color .25s}
+.rail button:hover,.rail button.on{color:var(--ink)}
+.rail button s{display:block;height:2px;border-radius:2px;background:var(--line);overflow:hidden;text-decoration:none}
+.rail button s i{display:block;height:100%;width:100%;background:var(--acc);transform-origin:left;transform:scaleX(0)}
+.rail button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hint{position:absolute;left:var(--pad);bottom:24px;display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);transition:opacity .15s}
+.hint.off{opacity:0;pointer-events:none}
+.hint i{position:relative;width:1.5px;height:28px;background:var(--line);overflow:hidden}
+.hint i::after{content:"";position:absolute;left:0;top:-40%;width:100%;height:40%;background:var(--acc);animation:fall 1.6s var(--ease) infinite}
+@keyframes fall{to{top:100%}}
+/* viagem longa pelos links: um corte rápido no lugar de passar por todos os pedidos */
+.veil{position:fixed;inset:0;z-index:45;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .2s}
+.veil.on{opacity:1}
+
+/* o desenho */
+.stage{position:relative}
+.stage svg{position:absolute;inset:72px 0 0 0;width:100%;height:calc(100% - 72px);overflow:visible}
+/* no computador o desenho deixa livre a faixa de baixo, onde ficam os botões de parte em parte */
+@media (min-width:861px){.stage svg{bottom:58px;height:calc(100% - 130px)}}
+/* a legenda da abertura, no meio do desenho, onde o sistema vai nascer */
+.capg{opacity:0;transition:opacity .5s}
+.capg.on{opacity:1}
+.capg .bk{fill:var(--bg);opacity:.92;stroke:rgba(240,163,94,.35);stroke-width:1}
+.capg text{fill:var(--warm);font-family:var(--mono);letter-spacing:.08em}
+.wire{fill:none;stroke:var(--acc);stroke-width:1.5;stroke-linecap:round;transition:stroke-dashoffset 1.1s var(--ease) .35s,opacity .5s}
+#net.boot *{transition:none!important}
+.wire.dim{opacity:.35}
+.mess{fill:none;stroke:var(--warm);stroke-opacity:.2;stroke-width:1.2;stroke-dasharray:3 5;transition:opacity .6s,stroke-opacity .5s;animation:crawl 2.4s linear infinite}
+.mess.hot{stroke-opacity:.75}
+@keyframes crawl{to{stroke-dashoffset:-16}}
+.ring{fill:none;stroke:rgba(255,255,255,.08);stroke-width:1;transition:opacity 1s}
+.pkt{fill:var(--acc);filter:drop-shadow(0 0 6px var(--acc));transition:opacity .4s}
+.node{transition:transform 1.1s var(--ease),opacity .5s}
+.node rect{fill:var(--node);stroke:rgba(255,255,255,.14);stroke-width:1;transition:stroke .5s,fill .5s}
+.node text{fill:var(--ink2);font-family:var(--sans);font-weight:500;transition:fill .5s}
+.node path.ic{fill:none;stroke:var(--muted);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .5s}
+.node.on rect{stroke:var(--acc);fill:#10241c}
+.node.on path.ic{stroke:var(--acc)}
+.node.on text{fill:var(--ink)}
+.node.prob rect{stroke:var(--warm);fill:#251b12}
+.node.prob path.ic{stroke:var(--warm)}
+.node.prob text{fill:var(--ink)}
+.node.loose{opacity:.8}
+/* apagado sem ficar transparente: o fundo do nó continua cobrindo os fios de trás */
+.node.dim{opacity:1}
+.node.dim rect{stroke:rgba(255,255,255,.06)}
+.node.dim text{fill:rgba(201,204,211,.28)}
+.node.dim path.ic{stroke:rgba(139,143,152,.28)}
+.node.on.dim rect{stroke:rgba(94,242,181,.3);fill:#0f1714}
+.node.on.dim text{fill:rgba(238,240,243,.5)}
+.node.on.dim path.ic{stroke:rgba(94,242,181,.45)}
+.node.hide{opacity:0}
+.node.off{opacity:.35}
+.tag{opacity:0;transition:opacity .35s,transform 1.1s var(--ease)}
+.tag.show{opacity:1}
+.tag .bk{fill:var(--bg);opacity:.9}
+.tag text{font-family:var(--sans);font-weight:500;text-anchor:middle}
+.tag .tp{fill:var(--warm);transition:opacity .4s .3s}
+.tag .ts{fill:var(--acc);opacity:0;transition:opacity .3s}
+.tag .stk{stroke:var(--warm);stroke-width:1.5;transition:stroke-dashoffset .4s .25s}
+.tag.solved .tp{opacity:.8}
+.tag.solved .ts{opacity:1;transition:opacity .45s .35s}
+.hub{transition:transform 1s var(--ease),opacity .6s}
+.hub circle.c{fill:#0f1f19;stroke:var(--acc);stroke-width:1.5}
+.hub circle.g{fill:var(--acc);opacity:.08}
+.hub text{fill:var(--ink);font-family:var(--sans);font-weight:600;text-anchor:middle}
+.hub text.s{font-family:var(--mono);font-weight:400;fill:var(--acc)}
+.cli{transition:opacity .4s}
+.cli text{fill:var(--ink2);font-family:var(--sans);font-weight:500}
+.cli circle{fill:var(--acc)}
+.cli.dim{opacity:.22}
+/* quem ainda não mandou logo: as iniciais num selo do mesmo tamanho */
+.nolg{fill:none;stroke:rgba(255,255,255,.24);stroke-width:1}
+.cli .nolt,.card .nolt{fill:var(--ink2);font-family:var(--mono);font-weight:500;letter-spacing:.08em}
+.card rect{fill:var(--node);stroke:rgba(255,255,255,.14)}
+.card text{fill:var(--ink2);font-family:var(--sans);text-anchor:middle}
+.ttl{fill:var(--ink);font-family:var(--sans);font-weight:500;text-anchor:middle}
+.capt{fill:var(--muted);font-family:var(--mono);text-anchor:middle}
+
+/* como funciona: três cenas no mesmo desenho */
+.fx .grid{opacity:0;transition:opacity .9s}
+.fx.k1 .grid,.fx.k2 .grid{opacity:1}
+/* o lugar das ferramentas já aparece tracejado na conversa: dá para ver o que vem */
+.fx .ghost{fill:none;stroke:rgba(255,255,255,.1);stroke-width:1;stroke-dasharray:4 7;transition:stroke .8s}
+.fx.k1 .ghost,.fx.k2 .ghost{stroke:rgba(255,255,255,.06);stroke-dasharray:none}
+.fx .bub{opacity:0;transform:translateY(10px);transition:opacity .4s,transform .6s var(--ease)}
+.fx.k0 .bub{opacity:1;transform:none}
+.fx .bub rect{fill:var(--card);stroke:rgba(94,242,181,.45);stroke-width:1.2}
+.fx .bub text{fill:var(--ink);font-family:var(--sans);font-weight:500}
+.fx .bub .who{fill:var(--muted);font-family:var(--mono);font-weight:400}
+.fx .caret{fill:var(--acc);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.fx .tool{opacity:0;transition:transform 1s var(--ease),opacity .5s}
+.fx.k1 .tool,.fx.k2 .tool{opacity:1}
+.fx .tw{transition:stroke-dashoffset .9s var(--ease)}
+.fx .arc{fill:none;stroke:var(--acc);stroke-width:2.5;stroke-linecap:round;transition:stroke-dashoffset 1.6s var(--ease) .5s,opacity .4s}
+.fx .feed{opacity:0;transform:translateY(14px);transition:opacity .3s,transform .4s}
+.fx.k2 .feed{opacity:1;transform:none;transition:opacity .5s .5s,transform .7s .5s var(--ease)}
+.fx .feed rect.bx{fill:var(--card);stroke:rgba(255,255,255,.12)}
+.fx .feed .fh{fill:var(--muted);font-family:var(--mono)}
+.fx .feed .rw{transition:transform .6s var(--ease),opacity .5s}
+.fx .feed .rw text{fill:var(--ink2);font-family:var(--sans);font-weight:500}
+.fx .feed .rw .ok{fill:var(--acc)}
+.fx .novo{opacity:0;transition:opacity .3s}
+.fx.k2 .novo{opacity:1;transition:opacity .5s 1.4s}
+.fx .novo rect{fill:#0f1714;stroke:var(--acc);stroke-dasharray:5 4;stroke-width:1.2}
+.fx .novo text{fill:var(--acc);font-family:var(--sans);font-weight:500}
+.fx .nw2{stroke-dasharray:5 5;opacity:0;transition:opacity .3s}
+.fx.k2 .nw2{opacity:1;transition:opacity .5s 1.8s}
+.fx .hub.got circle.c{animation:got .7s var(--ease)}
+@keyframes got{40%{stroke-width:5}}
+/* os 3 passos, sempre à vista: o número acende no passo atual, os feitos ficam marcados e o trecho enche ao rolar */
+.steps .ri{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-width:520px;margin-top:16px}
+.steps button{display:grid;grid-template-rows:auto 1fr auto;gap:9px;text-align:left;background:none;border:0;cursor:pointer;color:var(--muted);padding:2px 0;transition:color .3s}
+.steps button::before{content:attr(data-k);width:36px;height:36px;display:grid;place-items:center;border:1.5px solid var(--line);border-radius:50%;font-family:var(--mono);font-size:13px;transition:border-color .35s,background .35s,color .35s,box-shadow .35s}
+.steps button span{order:1;font-size:14.5px;font-weight:500;line-height:1.25}
+.steps button s{order:2;display:block;height:2px;border-radius:2px;background:var(--line);overflow:hidden;text-decoration:none}
+.steps button s i{display:block;height:100%;width:100%;background:var(--acc);transform-origin:left;transform:scaleX(0)}
+.steps button:hover,.steps button.on,.steps button.done{color:var(--ink)}
+.steps button.done::before{border-color:var(--acc);color:var(--acc)}
+.steps button.on::before{border-color:var(--acc);background:var(--acc);color:#07120d;box-shadow:0 0 18px rgba(94,242,181,.35)}
+@media (min-width:861px){
+  #como .cfl{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;height:100%;padding-right:24px}
+  #como .stack{display:grid;width:100%;margin-top:28px}
+  #como .stack .sl{grid-area:1/1;position:relative;top:auto;left:auto;right:auto;transform:translateY(8px)}
+  #como .stack .sl.on{transform:none}
+}
+
+/* listas da esquerda: tipos de cliente e setores */
+.filt{display:flex;flex-direction:column;margin-top:24px;border-top:1px solid var(--line)}
+.filt button,.sect li{display:flex;align-items:center;gap:12px;background:none;border:0;border-bottom:1px solid var(--line);padding:13px 2px;font-size:15px;text-align:left;cursor:pointer;color:var(--muted);transition:color .25s;list-style:none}
+.filt button:hover,.sect li:hover{color:var(--ink)}
+.filt button em,.sect li em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:12px}
+.filt button i,.sect li i{width:8px;height:8px;border-radius:50%;border:1.5px solid currentColor;flex:none;transition:background .3s,border-color .3s,box-shadow .3s}
+.filt button.on,.sect li.on{color:var(--ink)}
+.filt button.on i,.sect li.on i{background:var(--acc);border-color:var(--acc);box-shadow:0 0 10px var(--acc)}
+.fdesc{margin-top:16px;font-size:15px;line-height:1.5;color:var(--ink2);min-height:3em;max-width:40ch}
+.sect{margin-top:22px;border-top:1px solid var(--line)}
+.sect li{padding:11px 2px}
+
+/* contato: o título e os contatos diretos à esquerda, a conversa com o assistente à direita */
+#contato{position:relative;min-height:100vh;min-height:100svh;display:grid;grid-template-columns:minmax(0,40%) minmax(0,60%)}
+#contato .left{padding:96px 0 40px var(--pad);display:flex;flex-direction:column;justify-content:center}
+.ctf{display:grid;max-width:420px;margin-top:26px;border-top:1px solid var(--line)}
+.ctf a,.ctf p{display:flex;justify-content:space-between;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink2);transition:color .2s}
+.ctf a:hover{color:var(--ink)}
+.ctf a span,.ctf p span{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.ct{display:flex;align-items:center;justify-content:center;padding:96px 28px 40px}
+.chat{width:min(100%,470px);height:min(560px,calc(100vh - 150px));height:min(560px,calc(100svh - 150px));display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.chh{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.chh .av{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--acc);display:grid;place-items:center;flex:none}
+.chh .av i{width:12px;height:12px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc)}
+.chh b{display:block;font-weight:600;font-size:15px;line-height:20px}
+.chh small{display:block;font-size:12.5px;line-height:17px;color:var(--muted);margin-top:2px}
+.chl{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;padding:16px 16px 10px;scrollbar-width:thin}
+/* no toque, o dedo que começa na conversa e não tem o que rolar nela (ou chega na borda) leva a página.
+   As alturas da conversa são em px inteiros (linhas de altura fixa): com meio pixel sobrando no fim da lista,
+   o navegador dava o 1º deslize à lista, e a página não andava */
+@media (pointer:coarse){.chl{overscroll-behavior:auto}}
+.bb{max-width:86%;padding:10px 13px;border-radius:14px;font-size:15px;line-height:22px;white-space:pre-wrap;word-break:break-word;animation:rise .35s var(--ease) both}
+.bb.ag{align-self:flex-start;background:#1c1f25;border-bottom-left-radius:4px;color:var(--ink)}
+.bb.eu{align-self:flex-end;background:#10241c;border:1px solid rgba(94,242,181,.35);border-bottom-right-radius:4px;color:var(--ink)}
+.bb .btn{display:flex;width:100%;margin-top:10px;height:40px;font-size:14px;white-space:pre-wrap}
+.bb.dig{display:flex;gap:5px;padding:14px 15px}
+.bb.dig i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:dot 1s infinite}
+.bb.dig i:nth-child(2){animation-delay:.15s}.bb.dig i:nth-child(3){animation-delay:.3s}
+@keyframes dot{50%{opacity:.25;transform:translateY(-2px)}}
+.chs{display:flex;flex-wrap:wrap;gap:6px;padding:2px 16px 12px}
+.chs.off{display:none}
+.chs button{border:1px solid var(--line);background:transparent;border-radius:9px;padding:7px 10px;font-size:13px;line-height:18px;cursor:pointer;color:var(--ink2);transition:border-color .2s,color .2s}
+.chs button:hover{border-color:var(--acc);color:var(--acc)}
+.chf{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.chf input{flex:1;min-width:0;height:44px;border:1px solid var(--line);border-radius:12px;padding:0 14px;font-size:15px;background:#121419;outline:0}
+.chf input:focus{border-color:var(--acc)}
+.chf .btn{height:44px;padding:0 16px}
+
+.foot{border-top:1px solid var(--line);padding:48px var(--pad) 28px}
+.fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:28px}
+.fg p,.fg a{display:block;font-size:14px;color:var(--muted);line-height:1.5;margin-top:6px}
+.fg a:hover{color:var(--ink)}
+.fg h3{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fb{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.snap{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;scroll-snap-stop:always;pointer-events:none}
+.brandm{display:none}
+
+/* computador em janela baixa: tudo um pouco mais junto para caber */
+@media (min-width:861px) and (max-height:760px){.proof{display:none}.lead{margin-top:14px}.row{margin-top:20px}}
+/* o contato cabe inteiro numa tela, mesmo em janela baixa */
+@media (min-width:861px) and (max-height:720px){#contato .left,.ct{padding-top:84px;padding-bottom:24px}.ctf{margin-top:18px}.ctf a,.ctf p{padding:8px 2px}#projetos .sect li{padding:9px 2px}}
+@media (min-width:861px) and (max-height:620px){#contato .left{padding-top:72px;padding-bottom:14px}#contato h2{font-size:34px}#contato .lead{font-size:15px;margin-top:10px}.ctf{margin-top:12px}.ct{padding-top:76px;padding-bottom:14px}.chat{height:calc(100vh - 96px)}.chs button{padding:6px 9px;font-size:12.5px}}
+@media (min-width:861px) and (max-height:640px){.hint{display:none}.row .btn{height:44px;padding:0 16px;font-size:14px}.lead{font-size:15.5px}.q{margin-top:6px}.wirev{height:22px;margin:10px 0 8px 3px}.sol p{font-size:17px}.conn{display:none}}
+@media (min-width:861px) and (max-width:1100px){.row .btn{height:44px;padding:0 15px;font-size:14px}.ct{padding-right:76px}}
+/* em tela média o nome do pedido não cabe: o trilho da história mostra o número (o do como funciona tem só 3 e cabe) */
+@media (min-width:861px) and (max-width:1240px){#rail button span{display:none}#rail button::after{content:attr(data-k);font-family:var(--mono);font-size:11px}}
+/* tablet em pé: a letra cresce para acompanhar o desenho */
+@media (min-width:600px) and (max-width:860px){h1{font-size:40px!important}h2{font-size:34px!important}.lead{font-size:17px!important}.q{font-size:26px!important}.sol p{font-size:19px!important}}
+
+/* celular: menu embaixo, ao alcance do polegar, que abre em cartões.
+   O texto ocupa só a altura que precisa e fica acima da barra; o desenho fica com o resto. */
+.dock,.menu,.scrim{display:none}
+@media (max-width:860px){
+  .top{display:none}
+  .brandm{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px;margin-bottom:10px}
+  .brandm i{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--acc);position:relative}
+  .brandm i::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--acc)}
+  .pin{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+  .stage{grid-row:1;min-height:0}
+  .stage svg{inset:12px 0 4px 0;height:calc(100% - 16px)}
+  .left{grid-row:2;position:relative;z-index:2;display:flex;flex-direction:column;padding:8px 20px calc(80px + env(safe-area-inset-bottom,0px))}
+  .slides{height:auto;display:grid;grid-template-columns:minmax(0,1fr)}
+  .sl,.sl.on,.sl.fix{grid-area:1/1;position:relative;top:auto;left:auto;right:auto;transform:none!important}
+  .sl:not(.on):not(.fix){transform:translateY(8px)!important}
+  h1{font-size:28px;margin-top:8px}h2{font-size:26px;margin-top:8px}
+  .lead{font-size:15px;margin-top:8px}
+  #clientes .lead{display:none}
+  .row{margin-top:14px}.row .btn{flex:1;height:44px;padding:0 12px;font-size:14px}
+  .proof,.hint{display:none}
+  .q{font-size:20px;margin-top:6px}
+  .wirev{height:18px;margin:10px 0 8px 3px}
+  .sol p{font-size:16px;margin-top:4px}
+  .conn{display:none}
+  .rail{position:static;order:-1;margin-bottom:12px;transform:none}
+  .rail .ri{max-width:none;gap:6px}
+  .rail button{padding:16px 0;margin:-16px 0}
+  .rail button span{display:none}
+  .steps .ri{gap:8px;margin-top:8px}
+  .steps button{gap:6px}
+  .steps button::before{width:28px;height:28px;font-size:12px}
+  .steps button span{font-size:12px}
+  #como .stack{display:grid;margin-top:10px}
+  .secnav{display:none}
+  .filt{flex-direction:row;flex-wrap:wrap;gap:6px;margin-top:12px;border:0}
+  .filt button{border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:13.5px}
+  .filt button i{display:none}
+  .filt button.on{border-color:var(--acc);color:var(--acc)}
+  .fdesc{margin-top:10px;font-size:14px;min-height:0}
+  .sect{position:relative;display:flex;gap:6px;overflow-x:auto;border:0;margin:12px -20px 0;padding:0 20px 4px;scroll-padding-inline:20px;scrollbar-width:none;scroll-snap-type:x proximity}
+  .sect::-webkit-scrollbar{display:none}
+  .sect li{flex:none;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px;scroll-snap-align:start}
+  .sect li i{display:none}
+  .sect li em{margin-left:6px}
+  .sect li.on{border-color:var(--acc);color:var(--acc)}
+  /* no celular a conversa vem logo depois do texto, com o campo acima da barra de baixo; os contatos vêm depois dela */
+  #contato{display:flex;flex-direction:column;min-height:0;padding:40px 20px 110px}
+  #contato .left{display:contents}
+  .ct{order:1;padding:18px 0 0}
+  .ctf{order:2;max-width:none;margin-top:22px}
+  .chat{width:100%;height:480px;height:max(340px,min(480px,calc(100svh - 300px)));height:round(down,max(340px,min(480px,calc(100svh - 300px))),1px)}
+  /* as sugestões numa fileira só, que corre de lado: a conversa baixa não fica coberta por elas */
+  .chs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}
+  .chs::-webkit-scrollbar{display:none}
+  .chs button{flex:none;white-space:nowrap}
+  .foot{padding-bottom:110px}
+  .fg{grid-template-columns:1fr 1fr}.fg>div:first-child{grid-column:1/-1}
+  .dock{display:flex;position:fixed;z-index:60;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));height:56px;gap:6px;padding:6px;border-radius:16px;background:rgba(22,24,29,.88);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 18px 40px -16px rgba(0,0,0,.7)}
+  .dock .where{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:0 12px;border:0;border-radius:11px;background:transparent;text-align:left;cursor:pointer}
+  .dock .where small{display:block;font-family:var(--mono);font-size:10px;line-height:1.3;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dock .where small:empty{display:none}
+  .dock .where b{display:block;font-size:14px;line-height:1.2;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dock .where b .ar{display:inline-block;color:var(--acc);animation:nudge 1.4s var(--ease) infinite}
+  @keyframes nudge{50%{transform:translateY(3px)}}
+  .dock .where s{display:block;height:2px;border-radius:2px;background:var(--line);overflow:hidden;text-decoration:none}
+  .dock .where s i{display:block;height:100%;background:var(--acc);transform-origin:left;transform:scaleX(0)}
+  .dock .mb{flex:none;height:44px;padding:0 14px;border-radius:11px;border:1px solid var(--line);background:transparent;font-size:14px;font-weight:500;cursor:pointer}
+  .dock .wa{flex:none;height:44px;padding:0 14px;border-radius:11px;font-size:14px}
+  .scrim{display:block;position:fixed;inset:0;z-index:58;background:rgba(5,6,8,.75);opacity:0;pointer-events:none;transition:opacity .3s}
+  .scrim.on{opacity:1;pointer-events:auto}
+  .menu{display:grid;gap:8px;position:fixed;z-index:59;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));pointer-events:none;visibility:hidden;transition:visibility 0s .4s}
+  .menu.on{visibility:visible;transition:visibility 0s}
+  .menu .mc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 16px;opacity:0;transform:translateY(16px) scale(.98);transition:opacity .25s,transform .4s var(--ease)}
+  .menu.on{pointer-events:auto}
+  .menu.on .mc{opacity:1;transform:none}
+  .menu.on .mc:nth-child(1){transition-delay:.05s}
+  .menu .mc a{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:19px;font-weight:500}
+  .menu .mc a:last-child{border:0}
+  .menu .mc a small{font-size:12.5px;font-weight:400;color:var(--muted);display:flex;align-items:center;gap:10px}
+  .menu .mc a small i{width:7px;height:7px;border-radius:50%;background:transparent}
+  .menu .mc a.on small i{background:var(--acc);box-shadow:0 0 8px var(--acc)}
+  .menu .mc .ln{font-size:15px;font-weight:400;color:var(--ink2)}
+  .menu .mc .ln span{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase}
+}
+@media (max-width:400px){
+  .dock,.menu{left:8px;right:8px}
+  .dock{gap:4px;padding:5px}
+  .dock .where{padding:0 8px}
+  .dock .where b{font-size:13.5px}
+  .dock .mb,.dock .wa{padding:0 11px}
+}
+@media (max-width:380px){
+  .dock .where b{font-size:13px}
+  .dock .mb,.dock .wa{padding:0 10px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.wirev{transform:none}}
