@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Política de privacidade · Eyes Bot</title>
+<meta name="description" content="Como a Eyes Bot cuida dos seus dados quando você usa o site, conversa com o assistente ou segue para o WhatsApp.">
+<link rel="canonical" href="https://eyesbot.com.br/politica-de-privacidade.html">
+<meta name="theme-color" content="#0c0d10">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Eyes Bot">
+<meta property="og:title" content="Política de privacidade · Eyes Bot">
+<meta property="og:description" content="Como a Eyes Bot cuida dos seus dados quando você usa o site, conversa com o assistente ou segue para o WhatsApp.">
+<meta property="og:url" content="https://eyesbot.com.br/politica-de-privacidade.html">
+<meta property="og:image" content="https://eyesbot.com.br/assets/og.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+/* Política de privacidade: usa as cores, fontes e o rodapé do site (assets/site.css); só o desenho da leitura é daqui */
+html{scroll-behavior:auto}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{min-height:100vh;display:flex;flex-direction:column}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:12px;height:72px;padding:0 var(--pad);border-bottom:1px solid var(--line)}
+.ph .btn{height:40px;font-size:14px;padding:0 16px}
+.pg{flex:1;padding:64px var(--pad) 80px}
+.hero{max-width:760px}
+.hero h1{font-size:clamp(34px,6vw,60px);line-height:1.04;margin-top:14px;text-wrap:balance}
+.hero .lead{font-size:18px;max-width:56ch}
+.upd{display:inline-flex;align-items:center;gap:10px;margin-top:24px;font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.upd i{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc)}
+.cols{display:grid;grid-template-columns:230px minmax(0,1fr);gap:72px;margin-top:56px;align-items:start}
+.toc{position:sticky;top:28px}
+.toc h2{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+.toc ol{list-style:none;border-top:1px solid var(--line)}
+.toc a{display:flex;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line);font-size:14px;line-height:1.35;color:var(--muted);transition:color .25s}
+.toc a span{font-family:var(--mono);font-size:12px;flex:none}
+.toc a:hover{color:var(--ink)}
+.toc a:hover span{color:var(--acc)}
+.body{max-width:720px}
+.sum{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px 8px}
+.sum .lab{color:var(--acc)}
+.sum .lab i{background:var(--acc);box-shadow:0 0 10px var(--acc)}
+.sec{scroll-margin-top:28px;margin-top:44px;padding-top:40px;border-top:1px solid var(--line)}
+.sum + .sec{margin-top:44px}
+.sec h2{display:flex;align-items:baseline;gap:14px;margin:0 0 16px;font-size:24px;line-height:1.2;letter-spacing:-.02em;text-wrap:balance}
+.sec h2 .n{font-family:var(--mono);font-size:12.5px;font-weight:400;letter-spacing:.06em;color:var(--acc);flex:none}
+.body p{margin-top:14px;font-size:16px;line-height:1.65;color:var(--ink2)}
+.sec h2 + p{margin-top:0}
+.body strong{font-weight:500;color:var(--ink)}
+.body ul{list-style:none;margin-top:14px}
+.body li{position:relative;margin-top:12px;padding-left:22px;font-size:16px;line-height:1.6;color:var(--ink2)}
+.body li::before{content:"";position:absolute;left:3px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--acc)}
+.body a:not(.btn){color:var(--ink);border-bottom:1px solid rgba(94,242,181,.5);transition:color .2s,border-color .2s}
+.body a:not(.btn):hover{color:var(--acc);border-color:var(--acc)}
+.base{display:block;margin-top:4px;font-family:var(--mono);font-size:12px;line-height:1.5;letter-spacing:.02em;color:var(--muted)}
+.rows{margin-top:18px;border-top:1px solid var(--line)}
+.rows>div{display:grid;grid-template-columns:170px minmax(0,1fr);gap:18px;padding:14px 2px;border-bottom:1px solid var(--line)}
+.rows dt{padding-top:3px;font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.rows dd{font-size:15.5px;line-height:1.55;color:var(--ink2)}
+.rows.who dt{padding-top:0;font-family:var(--sans);font-size:16px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink)}
+.note{margin-top:18px;padding:14px 16px;border:1px solid rgba(240,163,94,.35);border-radius:14px;background:rgba(240,163,94,.06);font-size:15px;line-height:1.55;color:var(--ink2)}
+.note b{font-weight:500;color:var(--warm)}
+/* o que ainda falta preencher: impossível de passar batido */
+mark.pend{display:inline-block;padding:1px 7px;border:1px dashed var(--warm);border-radius:6px;background:rgba(240,163,94,.14);font-family:var(--mono);font-size:.88em;font-weight:500;line-height:1.5;color:var(--warm);white-space:nowrap}
+.cta{margin-top:48px;padding:26px;border:1px solid var(--line);border-radius:18px;background:var(--card)}
+.cta h2{margin:0;font-size:22px;line-height:1.2;letter-spacing:-.02em}
+.cta p{margin-top:10px}
+.cta .row{margin-top:20px}
+@media (max-width:860px){
+  .pg{padding:36px 20px 56px}
+  .hero .lead{font-size:16px}
+  .cols{grid-template-columns:minmax(0,1fr);gap:28px;margin-top:36px}
+  .toc{position:static}
+  .toc h2{display:none}
+  .toc ol{display:flex;gap:6px;overflow-x:auto;border:0;margin:0 -20px;padding:0 20px 4px;scrollbar-width:none}
+  .toc ol::-webkit-scrollbar{display:none}
+  .toc a{padding:8px 11px;border:1px solid var(--line);border-radius:10px;font-size:13.5px;white-space:nowrap}
+  .toc a span{display:none}
+  .sum{padding:18px 18px 4px}
+  .sec{margin-top:36px;padding-top:32px}
+  .sec h2{font-size:22px;gap:12px}
+  .rows>div{grid-template-columns:minmax(0,1fr);gap:4px}
+  .cta{padding:22px 18px}
+  .cta .row .btn{flex:1}
+  .foot{padding-bottom:28px}
+}
+</style>
+</head>
+<body>
+<!--
+PENDÊNCIAS ANTES DE IR AO AR: 3 trocas de texto, no corpo da página, procurando por "[RAZÃO SOCIAL]", "[CNPJ]" e "[PRAZO]".
+ Cada um está dentro de uma etiqueta de marcador (aparece em laranja na tela). Troque a etiqueta inteira, de abre a fecha, pelo valor.
+ 1. [RAZÃO SOCIAL] = razão social da Eyes Bot
+ 2. [CNPJ] = CNPJ da Eyes Bot
+ 3. [PRAZO] = por quanto tempo guarda a conversa e o contato de quem não avançou (sugestão: 12 meses)
+ Os nomes dos fornecedores de IA ficam "a pedido" (parte 4 aponta para a parte 6). Quando o assistente estiver definido, dá para listar os nomes na parte 4.
+ Conferir também:
+ - onde o n8n roda (próprio ou n8n Cloud) e se algum fornecedor de IA usa a conversa para treinar modelos;
+ - se o Felipe é mesmo o canal e o encarregado dos pedidos de titulares (LGPD, art. 41);
+ - se ligarem Vercel Analytics, ferramenta de estatística ou anúncios, a parte 7 precisa mudar.
+ Conferência rápida antes de publicar: grep -c '<mar[k]' politica-de-privacidade.html (tem de dar 0; antes das trocas dá 3).
+-->
+<header class="ph">
+  <a class="logo" href="index.html" aria-label="Eyes Bot, voltar ao site"><i></i>Eyes Bot</a>
+  <a class="btn b2" href="index.html">← Voltar ao site</a>
+</header>
+
+<main class="pg">
+  <header class="hero">
+    <div class="k">Política de privacidade</div>
+    <h1>Seus dados, <em>com clareza.</em></h1>
+    <p class="lead">Como a Eyes Bot cuida dos seus dados quando você usa este site, conversa com o nosso assistente ou segue para o WhatsApp.</p>
+    <p class="upd"><i></i><span>Atualizada em <time datetime="2026-10-27">27 de outubro de 2026</time></span></p>
+  </header>
+
+  <div class="cols">
+    <nav class="toc" aria-label="Nesta página">
+      <h2>Nesta página</h2>
+      <ol>
+        <li><a href="#quem"><span>01</span>Quem é o responsável</a></li>
+        <li><a href="#dados"><span>02</span>Quais dados coletamos</a></li>
+        <li><a href="#uso"><span>03</span>Para que usamos</a></li>
+        <li><a href="#compartilha"><span>04</span>Com quem compartilhamos</a></li>
+        <li><a href="#prazo"><span>05</span>Por quanto tempo guardamos</a></li>
+        <li><a href="#direitos"><span>06</span>Seus direitos</a></li>
+        <li><a href="#cookies"><span>07</span>Cookies e estatísticas</a></li>
+        <li><a href="#seguranca"><span>08</span>Segurança</a></li>
+        <li><a href="#menores"><span>09</span>Crianças e adolescentes</a></li>
+        <li><a href="#mudancas"><span>10</span>Mudanças nesta política</a></li>
+      </ol>
+    </nav>
+
+    <div class="body">
+      <section class="sum" aria-labelledby="resumo">
+        <div class="lab" id="resumo"><i></i>Em resumo</div>
+        <ul>
+          <li>Guardamos o que você escreve na conversa do site e os contatos que você nos passar.</li>
+          <li>Usamos isso para responder você e dar sequência ao seu pedido.</li>
+          <li>Quem atende na conversa é um assistente de inteligência artificial. Para falar com uma pessoa, chame no WhatsApp.</li>
+          <li>Os serviços que fazem o site e a conversa funcionar (hospedagem, automação, IA e WhatsApp) recebem os dados para prestar esse serviço.</li>
+          <li>O site não usa cookies nem estatísticas de visita.</li>
+          <li>Você pode pedir acesso, correção ou eliminação dos seus dados em <a href="mailto:felipe@eyesbot.com.br">felipe@eyesbot.com.br</a>.</li>
+        </ul>
+      </section>
+
+      <section class="sec" id="quem">
+        <h2><span class="n">01</span>Quem é o responsável</h2>
+        <p>Quem decide como os seus dados são usados (o “controlador”, na Lei Geral de Proteção de Dados, a LGPD) é a Eyes Bot.</p>
+        <dl class="rows">
+          <div><dt>Empresa</dt><dd>Eyes Bot · <mark class="pend">[RAZÃO SOCIAL]</mark></dd></div>
+          <div><dt>CNPJ</dt><dd><mark class="pend">[CNPJ]</mark></dd></div>
+          <div><dt>Cidade</dt><dd>São Paulo · SP</dd></div>
+          <div><dt>E-mail</dt><dd><a href="mailto:felipe@eyesbot.com.br">felipe@eyesbot.com.br</a></dd></div>
+          <div><dt>WhatsApp</dt><dd><a href="https://wa.me/5511950506530" target="_blank" rel="noopener">(11) 95050-6530</a></dd></div>
+        </dl>
+        <p>Este é também o canal para qualquer pedido sobre os seus dados. Veja a parte 6.</p>
+      </section>
+
+      <section class="sec" id="dados">
+        <h2><span class="n">02</span>Quais dados coletamos</h2>
+        <p>Coletamos o que chega até nós por uma ação sua e os dados técnicos que todo site recebe.</p>
+        <ul>
+          <li><strong>O que você escreve na conversa do site.</strong> As perguntas e respostas que você digita para o assistente. Se você escrever seu nome, telefone, e-mail, empresa ou detalhes do seu projeto, isso também fica na conversa.</li>
+          <li><strong>Os dados de contato que você informar.</strong> Por exemplo, ao escrever para o nosso e-mail ou ao pedir que a equipe retorne.</li>
+          <li><strong>A conversa no WhatsApp.</strong> Se você seguir para o WhatsApp, recebemos o seu número, o nome do seu perfil, as mensagens e os arquivos que você enviar. O botão “Continuar no WhatsApp” abre o aplicativo com uma mensagem pronta, que inclui o que você escreveu na conversa do site. Ela só chega até nós se você apertar enviar.</li>
+          <li><strong>Dados técnicos de acesso.</strong> O servidor que hospeda o site registra o endereço IP, a data e a hora do acesso e o navegador usado. É o padrão de qualquer site. As fontes de letra vêm do Google Fonts, e o Google também recebe o seu IP para entregá-las.</li>
+        </ul>
+        <p class="note"><b>Cuidado:</b> não escreva na conversa senhas, dados de cartão, documentos (como CPF ou RG) nem informações de saúde. Não precisamos disso para falar com você.</p>
+      </section>
+
+      <section class="sec" id="uso">
+        <h2><span class="n">03</span>Para que usamos</h2>
+        <p>Usamos os seus dados para as finalidades abaixo, cada uma com a sua base legal na LGPD.</p>
+        <ul>
+          <li><strong>Responder as suas perguntas e entender o que a sua empresa precisa.</strong>
+            <span class="base">Base legal: procedimentos preliminares a pedido seu, ligados a um possível contrato (art. 7º, V).</span></li>
+          <li><strong>Dar sequência ao contato:</strong> retornar por WhatsApp ou e-mail e montar uma proposta.
+            <span class="base">Base legal: a mesma, art. 7º, V.</span></li>
+          <li><strong>Manter o site e o assistente seguros e funcionando:</strong> evitar abuso e corrigir erros.
+            <span class="base">Base legal: legítimo interesse (art. 7º, IX).</span></li>
+          <li><strong>Cumprir obrigações legais e defender direitos, se for preciso.</strong>
+            <span class="base">Base legal: obrigação legal (art. 7º, II) e exercício regular de direitos (art. 7º, VI).</span></li>
+        </ul>
+        <p>O assistente do site é uma inteligência artificial, não uma pessoa. Ele responde dúvidas e encaminha o seu contato para a equipe. Se você prefere falar com uma pessoa, <a href="https://wa.me/5511950506530" target="_blank" rel="noopener">chame no WhatsApp</a>.</p>
+      </section>
+
+      <section class="sec" id="compartilha">
+        <h2><span class="n">04</span>Com quem compartilhamos</h2>
+        <p>Usamos serviços de terceiros para o site e a conversa funcionarem. Eles recebem os dados na medida em que isso é necessário para prestar o serviço.</p>
+        <dl class="rows who">
+          <div><dt>Vercel</dt><dd>Hospedagem do site. Recebe os dados técnicos de acesso.</dd></div>
+          <div><dt>n8n</dt><dd>Plataforma de automação. Recebe a conversa do site, repassa ao assistente e organiza o seu contato para a equipe.</dd></div>
+          <div><dt>Fornecedores de inteligência artificial</dt><dd>Processam o texto da conversa para o assistente gerar as respostas. Para saber quais são, <a href="#direitos">peça a lista</a> (parte 6).</dd></div>
+          <div><dt>WhatsApp (Meta)</dt><dd>Se você seguir para o WhatsApp, a conversa passa pela plataforma da Meta, que tem política de privacidade própria.</dd></div>
+          <div><dt>Google Fonts</dt><dd>Entrega as fontes de letra do site. Recebe o seu IP e dados do navegador.</dd></div>
+        </dl>
+        <p>Também podemos informar dados a autoridades, quando a lei exigir.</p>
+        <p>Alguns desses serviços podem tratar dados fora do Brasil. Quando isso acontece, seguimos as regras da LGPD para transferência internacional de dados (arts. 33 a 36).</p>
+      </section>
+
+      <section class="sec" id="prazo">
+        <h2><span class="n">05</span>Por quanto tempo guardamos</h2>
+        <p>Guardamos a conversa e os contatos pelo tempo necessário para responder você e dar sequência ao seu pedido. Se o contato não avançar, apagamos ou anonimizamos os dados em até <mark class="pend">[PRAZO]</mark>.</p>
+        <p>Se você virar cliente, os dados passam a seguir o contrato e a lei, como os prazos fiscais e os de defesa em processos. Os dados técnicos de acesso ficam na hospedagem pelo tempo que ela define.</p>
+      </section>
+
+      <section class="sec" id="direitos">
+        <h2><span class="n">06</span>Seus direitos</h2>
+        <p>A LGPD (art. 18) garante que você pode pedir, a qualquer momento:</p>
+        <ul>
+          <li>confirmar se tratamos dados seus e ter acesso a eles;</li>
+          <li>corrigir dados incompletos, errados ou desatualizados;</li>
+          <li>anonimizar, bloquear ou eliminar dados desnecessários, em excesso ou tratados fora da lei;</li>
+          <li>levar os seus dados para outro serviço (portabilidade);</li>
+          <li>eliminar os dados que tratamos com o seu consentimento;</li>
+          <li>saber com quem compartilhamos os seus dados;</li>
+          <li>saber que você pode não dar o consentimento e o que acontece se não der, e retirá-lo quando quiser;</li>
+          <li>pedir a revisão de uma decisão tomada só por um sistema automatizado (art. 20).</li>
+        </ul>
+        <p><strong>Como pedir.</strong> Escreva para <a href="mailto:felipe@eyesbot.com.br">felipe@eyesbot.com.br</a> ou chame no <a href="https://wa.me/5511950506530" target="_blank" rel="noopener">WhatsApp (11) 95050-6530</a>. Diga o que você quer e como podemos te encontrar na nossa base, por exemplo o telefone ou o e-mail que você usou na conversa. Podemos pedir uma confirmação de que é você mesmo, para não entregar os seus dados a outra pessoa.</p>
+        <p>Respondemos no prazo da lei. Se achar que não resolvemos, você pode reclamar à Autoridade Nacional de Proteção de Dados (ANPD), em <a href="https://www.gov.br/anpd" target="_blank" rel="noopener">gov.br/anpd</a>.</p>
+      </section>
+
+      <section class="sec" id="cookies">
+        <h2><span class="n">07</span>Cookies e estatísticas</h2>
+        <p>Hoje o site não usa cookies, não tem ferramentas de estatística de visitas nem de anúncios, e não grava nada no seu navegador. Se isso mudar, atualizamos esta página.</p>
+        <p>O site tem links para o WhatsApp, o LinkedIn e outros endereços. Cada um deles tem a sua própria política de privacidade.</p>
+      </section>
+
+      <section class="sec" id="seguranca">
+        <h2><span class="n">08</span>Segurança</h2>
+        <p>Adotamos medidas técnicas e administrativas para proteger os dados contra acesso não autorizado, perda e uso indevido. Nenhum sistema é totalmente livre de falhas. Se houver um incidente que possa causar risco ou dano relevante a você, avisamos você e a ANPD, como a lei manda (art. 48).</p>
+      </section>
+
+      <section class="sec" id="menores">
+        <h2><span class="n">09</span>Crianças e adolescentes</h2>
+        <p>O site é voltado a empresas e profissionais. Não coletamos de propósito dados de crianças e adolescentes. Se um menor nos enviou dados, escreva para <a href="mailto:felipe@eyesbot.com.br">felipe@eyesbot.com.br</a> e apagamos.</p>
+      </section>
+
+      <section class="sec" id="mudancas">
+        <h2><span class="n">10</span>Mudanças nesta política</h2>
+        <p>Podemos atualizar esta política quando o site, o assistente ou a lei mudarem. Quando isso acontecer, a data no topo da página muda também.</p>
+      </section>
+
+      <aside class="cta" aria-labelledby="duvida">
+        <h2 id="duvida">Ficou com alguma dúvida?</h2>
+        <p>Escreva ou chame. A gente responde.</p>
+        <div class="row">
+          <a class="btn b1" href="https://wa.me/5511950506530" target="_blank" rel="noopener">Falar no WhatsApp</a>
+          <a class="btn b2" href="mailto:felipe@eyesbot.com.br">felipe@eyesbot.com.br</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="fg">
+    <div><span class="logo"><i></i>Eyes Bot</span><p>Agentes de IA, automações, plataformas e sistemas sob medida. O que a sua empresa precisar, a gente monta.</p></div>
+    <div><h3>Navegue</h3><a href="index.html#historia">Soluções</a><a href="index.html#clientes">Clientes</a><a href="index.html#projetos">Projetos</a><a href="index.html#como">Como funciona</a><a href="index.html#contato">Contato</a></div>
+    <div><h3>O que a gente monta</h3><p>Agentes de IA</p><p>Automações</p><p>Plataformas</p><p>Sistemas sob medida</p><p>Integrações</p></div>
+    <div><h3>Contato</h3><a href="https://wa.me/5511950506530" target="_blank" rel="noopener">(11) 95050-6530</a><a href="mailto:felipe@eyesbot.com.br">felipe@eyesbot.com.br</a><a href="https://br.linkedin.com/in/felipe-jk-200808a2" target="_blank" rel="noopener">LinkedIn ↗</a><p>São Paulo · SP</p></div>
+  </div>
+  <div class="fb"><span>© 2026 Eyes Bot · São Paulo, Brasil · Política de privacidade</span><span>Agentes de IA, automações, plataformas e sistemas</span><a class="fup" href="#top">Voltar ao topo ↑</a></div>
+</footer>
+</body>
+</html>
