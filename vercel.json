@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/ai/diagnostico", "destination": "https://eyesbot-site.vercel.app/ai/diagnostico" },
+    { "source": "/ai/diagnostico/:path*", "destination": "https://eyesbot-site.vercel.app/ai/diagnostico/:path*" }
+  ]
+}
